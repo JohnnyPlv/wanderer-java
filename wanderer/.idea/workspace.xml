@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1159166d-2a82-44f0-9268-4fc45f15866c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../projectREADME.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/entity/Entity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/entity/Player.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/entity/Skeleton.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/map/Board.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/map/Positioned.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/map/PositionedImage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../stepbystep.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="1159166d-2a82-44f0-9268-4fc45f15866c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

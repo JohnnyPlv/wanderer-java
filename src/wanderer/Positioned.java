@@ -1,4 +1,4 @@
-package map;
+package wanderer;
 
 import java.awt.*;
 

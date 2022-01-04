@@ -1,21 +1,18 @@
-package map;
+package wanderer;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class PositionedImage {
+public class Tile {
 
     // TODO change this class to TILE
     BufferedImage image;
     int posX, posY;
 
-    public PositionedImage(String filename, int posX, int posY) {
+    public Tile(String filename, int posX, int posY) {
         this.posX = posX;
         this.posY = posY;
         try {
