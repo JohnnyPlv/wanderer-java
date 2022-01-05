@@ -9,15 +9,11 @@ import java.util.List;
 
 public class Board extends JComponent implements KeyListener {
 
-    private int heroPositionX;
+    private int heroPositionX;  // TODO implement the actual value from player instead board value for hero
     private int heroPositionY;
-    Player hero;
-    protected Skeleton skeleton;
-    protected Skeleton skeleton1;
-    protected Skeleton skeleton2;
-    List<Skeleton> listOfSkeletons;
+    protected Player hero;
+    protected List<Entity> listOfEntities; // TODO change List of entites for Enemies to List of enemies - > create class Enemy?
     protected int moveClock;
-    protected Boss lordChaos;
 
 
      int[][] gameBoard = {
@@ -37,13 +33,8 @@ public class Board extends JComponent implements KeyListener {
         heroPositionX = 360;
         heroPositionY = 360;
         hero = new Player();
-        skeleton = new Skeleton();
-        skeleton1 = new Skeleton(648,648);
-        skeleton2 = new Skeleton(0,648);
-        listOfSkeletons = new ArrayList<>();
-        addSkeletons();
-        lordChaos = new Boss();
-
+        listOfEntities = new ArrayList<>();
+        addEntities();
         // set the size of your draw board
         setPreferredSize(new Dimension(720, 820));
         setVisible(true);
@@ -55,36 +46,10 @@ public class Board extends JComponent implements KeyListener {
         super.paint(graphics);
         background(graphics);
         positionHero();
-        //placeSkeletons(graphics);
+        drawEntities(graphics);
+        hero.drawStats(graphics,0,730);
+        drawEntitiesStat(graphics);
         hero.draw(graphics);
-        skeleton.draw(graphics);
-        skeleton1.draw(graphics);
-        skeleton2.draw(graphics);
-        lordChaos.draw(graphics);
-        //System.out.println(listOfSkeletons.size());
-
-
-        if (hero.getPosX() == skeleton.getPosX() && hero.getPosY() == skeleton.getPosY()) {
-            listOfSkeletons.remove(0);
-            System.out.println("Skeleton Killed");
-            System.out.println("Skeletons remaining " + listOfSkeletons.size());
-        }
-        int random = ((int) (Math.random() * 4) + 1 );
-
-
-
-
-
-
-        //graphics.fillRect(testBoxX, testBoxY, 50, 100);
-        // here you have a 720x720 canvas
-        // you can create and draw an image using the class below e.g.
-//        PositionedImage image = new PositionedImage("img/hero-down.png", testBoxX, testBoxY);
-//        listOfImages.add(image);
-//        image.draw(graphics);
-//        hero.setPosX(testBoxX); // TODO FIX with actual stats from player class
-//        hero.setPosY(testBoxY);
-        //hero.positionedImage("img/hero-down.png",testBoxX,testBoxY);
     }
 
     public static void main(String[] args) {
@@ -95,12 +60,10 @@ public class Board extends JComponent implements KeyListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.pack();
-
         // Here is how you can add a key event listener
         // The board object will be notified when hitting any key
         // with the system calling one of the below 3 methods
         frame.addKeyListener(board);
-
         // Notice (at the top) that we can only do this
         // because this Board class (the type of the board object) is also a KeyListener
     }
@@ -117,69 +80,48 @@ public class Board extends JComponent implements KeyListener {
 
     }
 
-    // But actually we can use just this one for our goals here
 
-    // TODO implement the actual value from player instead testBox
     @Override
     public void keyReleased(KeyEvent e) {
         moveClock += 1;
-        int random = ((int) (Math.random() * 4) + 1 );
-        //int heroPosition = testBoxY;
-        // When the up or down keys hit, we change the position of our box
-        if (e.getKeyCode() == KeyEvent.VK_UP && heroPositionY >= 72 && isFloor(heroPositionX / 72, (heroPositionY - 72) / 72)) {
+        // checks if the floor is occupied by enemy, if yes it will get out of the method
+        if (isOccupiedBySkeleton() && e.getKeyCode() != KeyEvent.VK_SPACE) {
+            return;
+        }
+        // if the floor is occupies and also the space was hit then hero fights the entity which shares the pos with hero
+        if (isOccupiedBySkeleton() && e.getKeyCode() == KeyEvent.VK_SPACE) {
+            for (Entity s : listOfEntities) {
+                if (hero.posX == s.posX && hero.posY == s.posY) {
+                    hero.fight(s);
+                }
+
+            }
+        }
+        // logic for avoding the walls, checks the coordinates of the matrix, if I move up it checks the coordinate of Y -72 - the tile one up (because wanna move up, if value of matrix 1 then its false
+        if (e.getKeyCode() == KeyEvent.VK_UP && heroPositionY >= 72 && isGround(heroPositionX / 72, (heroPositionY - 72) / 72)) {
             hero.changeImage("img/hero-up.png");
-            //hero.setPosY(testBoxY);
             heroPositionY -= 72;
-        } else if(e.getKeyCode() == KeyEvent.VK_DOWN && heroPositionY <= 576 && isFloor(heroPositionX / 72, (heroPositionY + 72) / 72)) {
+        } else if(e.getKeyCode() == KeyEvent.VK_DOWN && heroPositionY <= 576 && isGround(heroPositionX / 72, (heroPositionY + 72) / 72)) {
             hero.changeImage("img/hero-down.png");
             heroPositionY += 72;
-        } else if(e.getKeyCode() == KeyEvent.VK_LEFT && heroPositionX >= 72 && isFloor((heroPositionX - 72) / 72, heroPositionY / 72)) {
+        } else if(e.getKeyCode() == KeyEvent.VK_LEFT && heroPositionX >= 72 && isGround((heroPositionX - 72) / 72, heroPositionY / 72)) {
             hero.changeImage("img/hero-left.png");
             heroPositionX -= 72;
-        } else if(e.getKeyCode() == KeyEvent.VK_RIGHT && heroPositionX <= 576 && isFloor((heroPositionX + 72) / 72, heroPositionY / 72) ) {
+        } else if(e.getKeyCode() == KeyEvent.VK_RIGHT && heroPositionX <= 576 && isGround((heroPositionX + 72) / 72, heroPositionY / 72) ) {
             hero.changeImage("img/hero-right.png");
             heroPositionX += 72;
         }
 
-//        if (e.getKeyCode() == KeyEvent.VK_UP && hero.posY >= 72 && isFloor(hero.posX / 72, (hero.posY - 72) / 72)) {
-//            hero.changeImage("img/hero-up.png");
-//            //hero.setPosY(testBoxY);
-//            hero.posY -= 72;
-//        } else if(e.getKeyCode() == KeyEvent.VK_DOWN && hero.posY <= 576 && isFloor(hero.posX / 72, (hero.posY + 72) / 72)) {
-//            hero.changeImage("img/hero-down.png");
-//            hero.posY += 72;
-//        } else if(e.getKeyCode() == KeyEvent.VK_LEFT && hero.posX >= 72 && isFloor((hero.posX - 72) / 72, hero.posY / 72)) {
-//            hero.changeImage("img/hero-left.png");
-//            hero.posX -= 72;
-//        } else if(e.getKeyCode() == KeyEvent.VK_RIGHT && hero.posX <= 576 && isFloor((hero.posX + 72) / 72, hero.posY / 72) ) {
-//            hero.changeImage("img/hero-right.png");
-//            hero.posX += 72;
-//        }
-
-
-
-
-
-
-//        if (random == 1 && skeleton.posY >= 72 && skeleton.isFloor(gameBoard,skeleton.posX/72,(skeleton.posY-72) / 72)) {
-//            skeleton.posY -= 72;
-//        } else if (random == 2 && skeleton.posY <= 576 && skeleton.isFloor(gameBoard, skeleton.posX/72,(skeleton.posY + 72)/72)){
-//            skeleton.posY += 72;
-//        } else if ( random == 3 && skeleton.posX >= 72 && skeleton.isFloor(gameBoard, (skeleton.posX - 72)/72, skeleton.posY/72)) {
-//            skeleton.posX -= 72;
-//        } else if (random == 4 && skeleton.posX <= 576 && skeleton.isFloor(gameBoard,(skeleton.posX + 72) / 72, skeleton.posY/72)) {
-//            skeleton.posX += 72;
-//        }
+        // every time the key is pressed the turn counter starts summing - every second move the enemy moves
         if (moveClock % 2 == 0) {
-            skeleton.randomMoveNpc(gameBoard);
-            skeleton1.randomMoveNpc(gameBoard);
-            skeleton2.randomMoveNpc(gameBoard);
-            lordChaos.randomMoveNpc(gameBoard);
+            for (Entity s : listOfEntities) {
+               s.randomMoveNpc(gameBoard);
+            }
         }
 
-        repaint();
+        removeSkeletons();
 
-        // and redraw to have a new picture with the new coordinates
+        repaint();
 
     }
 
@@ -187,7 +129,7 @@ public class Board extends JComponent implements KeyListener {
         hero.setPosY(heroPositionY);
         hero.setPosX(heroPositionX);
     }
-
+    // draws a background - method added to call in paint
     public void background(Graphics graphics) {
         int posX = 0;
         int posY = 0;
@@ -208,31 +150,57 @@ public class Board extends JComponent implements KeyListener {
             posX += 72;
         }
     }
-
-    public void placeSkeletons(Graphics graphics) {
-        int posX = 0;
-        int posY = 0;
-
-        listOfSkeletons.get(0).setPosX(0);
-        listOfSkeletons.get(0).setPosY(576);
-        listOfSkeletons.get(0).draw(graphics);
-
-    }
-
-    public void addSkeletons() {
-        for (int i = 0; i < 3 ; i++) {
-            listOfSkeletons.add(new Skeleton());
+    // adds the Enemy to the List<Entites> ,including boss
+    public void addEntities() {
+        for (int i = 0; i < 4 ; i++) {
+            if (i == 0) {
+                listOfEntities.add(new Skeleton());
+            }
+            if (i == 1) {
+                listOfEntities.add(new Skeleton(648,648));
+            }
+            if (i == 2) {
+                listOfEntities.add(new Skeleton(0,648));
+            }
+            if (i == 3) {
+                listOfEntities.add(new Boss());
+            }
         }
     }
-
-    public int getHeroPositionX() {
-        return heroPositionX;
+    // method to call the Enemies in bulk on the board
+    public void drawEntities(Graphics graphics) {
+        for (Entity s : listOfEntities) {
+            s.draw(graphics);
+        }
     }
-
-    public int getHeroPositionY() {
-        return heroPositionY;
+    // method to draw the enttites stat on the board
+    public void drawEntitiesStat(Graphics graphics) {
+        for (int i = 0; i < listOfEntities.size() ; i++) {
+            if (hero.posX == listOfEntities.get(i).posX && hero.posY == listOfEntities.get(i).posY){
+                listOfEntities.get(i).drawStats(graphics,0,750);
+            }
+        }
     }
-    public boolean isFloor(int x, int y) {
+    // method to remove the skeletos, loops through the list and checks wheter the condition isDead is true, if yes removes the char
+    public void removeSkeletons () {
+        for (Entity s : listOfEntities) {
+            if (s.isDead()) {
+                listOfEntities.remove(s);
+                break;
+            }
+        }
+    }
+    // method to check if its occupied by skeleton, this method is used for entering the fight
+    public boolean isOccupiedBySkeleton () {
+        for (Entity s : listOfEntities) {
+            if (hero.posX == s.posX && hero.posY == s.posY) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // simple boolean used it avooiding wals logic, if matrix value 0 ( floor ) then its true
+    public boolean isGround(int x, int y) {
         return gameBoard[y][x] == 0;
     }
 }

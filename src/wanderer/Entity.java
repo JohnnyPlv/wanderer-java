@@ -7,17 +7,29 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class Entity extends JComponent implements Positioned {
+public abstract class Entity extends JComponent implements Drawable {
     BufferedImage image;
     protected int posX , posY;
     protected int hp;
+    protected int dp;
+    protected int sp;
+    protected int level;
 
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " (Level " + level + " ) " + " HP " + hp + " DP " + dp + " SP " + sp;
+    }
 
     @Override
     public void draw(Graphics graphics) {
         if (image != null) {
             graphics.drawImage(image, posX, posY, null);
         }
+    }
+
+    public void drawStats (Graphics graphics, int posX, int posY) {
+        graphics.drawString(this.toString(),posX,posY);
     }
 
     @Override
@@ -38,18 +50,6 @@ public abstract class Entity extends JComponent implements Positioned {
         }
     }
 
-//    public boolean movedToWall(int [][] gameBoard, int posY,int posX) {
-//        for (int i = 0; i < gameBoard.length ; i++) {
-//            for (int j = 0; j < gameBoard.length ; j++) {
-//                if (gameBoard[i][j] == 0) {
-//                    if (i * 72 == posY && j * 72 == posX ) {
-//                        return true;
-//                    }
-//                }
-//            }
-//        }
-//        return false;
-//    }
 
     // makes NPC to move randomly around the map - //TODO - fix timing
     public void randomMoveNpc(int [][] gameBoard) {
@@ -65,17 +65,19 @@ public abstract class Entity extends JComponent implements Positioned {
         }
     }
 
+    public boolean isDead () {
+        if (this.hp <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     public boolean isFloor(int [][] gameBoard,int x, int y) {
         return gameBoard[y][x] == 0;
     }
 
-    public int getPosX() {
-        return posX;
-    }
-
-    public int getPosY() {
-        return posY;
-    }
 
     public void setPosX(int posX) {
         this.posX = posX;
