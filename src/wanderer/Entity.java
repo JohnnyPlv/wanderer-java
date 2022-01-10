@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public abstract class Entity extends JComponent implements Drawable {
+public abstract class Entity implements Drawable {
     BufferedImage image;
     protected int posX , posY;
     protected int hp;
