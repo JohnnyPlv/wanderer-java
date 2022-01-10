@@ -31,7 +31,12 @@ public abstract class Entity implements Drawable {
     }
 
     public void drawStats (Graphics graphics, int posX, int posY) {
-        graphics.drawString(this.toString(),posX,posY);
+        Graphics2D g2 = (Graphics2D) graphics;
+        int fontSize = 20;
+        Font f = new Font("SANS_SERIF",Font.BOLD,fontSize);
+        g2.setFont(f);
+        g2.drawString(this.toString(),posX,posY);
+
     }
 
     @Override

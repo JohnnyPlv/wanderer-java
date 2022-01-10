@@ -1,12 +1,16 @@
 package wanderer;
 
+import java.awt.*;
+
 public class Player extends Entity {
-    public String appearance = "img/hero-right.png";
+    protected String appearance = "img/hero-right.png";
+    protected int xpBar;
 
 
 
     public Player() {
         this.level = 1;
+        this.xpBar = 0;
         this.hp = 20 + dice;
         this.dp = 2 * dice;
         this.sp = 5 * dice;
@@ -24,6 +28,19 @@ public class Player extends Entity {
                 this.hp -= enemy.sp + (dice *2 ) - this.dp;
             }
         }
+
+    }
+
+    public String toStringXpBar() {
+        return "XP BAR: " + xpBar;
+    }
+
+    public void drawXpBar (Graphics graphics, int posX, int posY) {
+        Graphics2D g2 = (Graphics2D) graphics;
+        int fontSize = 20;
+        Font f = new Font("SANS_SERIF",Font.BOLD,fontSize);
+        g2.setFont(f);
+        g2.drawString(this.toStringXpBar(),posX,posY);
 
     }
 

@@ -14,6 +14,7 @@ public class Board extends JComponent implements KeyListener {
     protected Player hero;
     protected List<Entity> listOfEntities; // TODO change List of entites for Enemies to List of enemies - > create class Enemy?
     protected int moveClock;
+    protected ExperienceTable experienceTable;
 
 
      int[][] gameBoard = {
@@ -33,6 +34,7 @@ public class Board extends JComponent implements KeyListener {
         heroPositionX = 360;
         heroPositionY = 360;
         hero = new Player();
+        experienceTable = new ExperienceTable();
         listOfEntities = new ArrayList<>();
         addEntities();
         // set the size of your draw board
@@ -47,8 +49,9 @@ public class Board extends JComponent implements KeyListener {
         background(graphics);
         positionHero();
         drawEntities(graphics);
-        hero.drawStats(graphics,0,730);
-        drawEntitiesStat(graphics);
+        hero.drawStats(graphics,5,740);
+        hero.drawXpBar(graphics,600,740);
+        drawEntitiesStat(graphics, 5, 760);
         hero.draw(graphics);
     }
 
@@ -79,12 +82,18 @@ public class Board extends JComponent implements KeyListener {
                 if (hero.posX == s.posX && hero.posY == s.posY) {
                     if (hero.inspiration >= s.inspiration) {
                         hero.strike(s);
+                        if (s.isDead()) {
+                            increaseExperience();
+                        }
                         if (!s.isDead())
                         s.strike(hero);
                     } else {
                         s.strike(hero);
                         if (!hero.isDead())
                         hero.strike(s);
+                        if (s.isDead()) {
+                            increaseExperience();
+                        }
                     }
                 }
 
@@ -116,6 +125,17 @@ public class Board extends JComponent implements KeyListener {
 
         repaint();
 
+    }
+
+    public void increaseExperience () {
+        for (Entity e : listOfEntities) {
+            if (e.isDead() && e instanceof Skeleton) {
+                hero.xpBar += experienceTable.XPGAINEDSKELETON;
+            }
+            if (e.isDead() && e instanceof Boss) {
+                hero.xpBar += experienceTable.XPGAINEDBOSS;
+            }
+        }
     }
 
     public void positionHero() {
@@ -167,10 +187,10 @@ public class Board extends JComponent implements KeyListener {
         }
     }
     // method to draw the enttites stat on the board
-    public void drawEntitiesStat(Graphics graphics) {
+    public void drawEntitiesStat(Graphics graphics, int posX, int posY) {
         for (int i = 0; i < listOfEntities.size() ; i++) {
             if (hero.posX == listOfEntities.get(i).posX && hero.posY == listOfEntities.get(i).posY){
-                listOfEntities.get(i).drawStats(graphics,0,750);
+                listOfEntities.get(i).drawStats(graphics,posX,posY);
             }
         }
     }

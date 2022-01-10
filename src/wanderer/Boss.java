@@ -1,7 +1,7 @@
 package wanderer;
 
 public class Boss extends Entity{
-    public String appearance = "img/boss.png";
+    protected String appearance = "img/boss.png";
 
     // TODO fix the stats /2 SP and DP
     public Boss() {
