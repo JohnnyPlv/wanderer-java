@@ -73,11 +73,19 @@ public class Board extends JComponent implements KeyListener {
             return;
         }
 
-        // if the floor is occupies and also the space was hit then hero fights the entity which shares the pos with hero
+        // if the floor is occupies and also the space was hit then hero strikes the entity which shares the pos with hero
         if (isOccupiedBySkeleton() && e.getKeyCode() == KeyEvent.VK_SPACE) {
             for (Entity s : listOfEntities) {
                 if (hero.posX == s.posX && hero.posY == s.posY) {
-                    hero.fight(s);
+                    if (hero.inspiration >= s.inspiration) {
+                        hero.strike(s);
+                        if (!s.isDead())
+                        s.strike(hero);
+                    } else {
+                        s.strike(hero);
+                        if (!hero.isDead())
+                        hero.strike(s);
+                    }
                 }
 
             }

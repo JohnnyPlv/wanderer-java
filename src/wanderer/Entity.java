@@ -13,12 +13,14 @@ public abstract class Entity implements Drawable {
     protected int hp;
     protected int dp;
     protected int sp;
+    protected int inspiration;
     protected int level;
+    protected int dice = ((int) (Math.random() * 6) + 1 );
 
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " (Level " + level + " ) " + " HP " + hp + " DP " + dp + " SP " + sp;
+        return getClass().getSimpleName() + " (Level " + level + " ) " + " HP " + hp + " DP " + dp + " SP " + sp + " Inspiration " + inspiration;
     }
 
     @Override
@@ -71,6 +73,10 @@ public abstract class Entity implements Drawable {
         } else {
             return false;
         }
+    }
+
+    public void strike(Entity character) {
+        character.hp -= this.sp - character.dp;
     }
 
 

@@ -9,17 +9,18 @@ public class Skeleton extends Entity {
 
     public Skeleton() {
         this.level = 1;
-        this.hp = 2 * this.level * ((int) (Math.random() * 6) + 1 );
-        this.dp = this.level * ((int) (Math.random() * 6) + 1 );
-        this.sp = this.level * ((int) (Math.random() * 6) + 1 );
+        this.hp = 2 * this.level * dice;
+        this.dp = this.level * dice;
+        this.sp = this.level * dice;
+        this.inspiration = 1 + this.level + dice;
         this.positionedImage(appearance,216,216);
     }
 
     public Skeleton(int posX,int posY) {
         this.level = 1;
-        this.hp = 2 * this.level * ((int) (Math.random() * 6) + 1 );
-        this.dp =  this.level * ((int) (Math.random() * 6) + 1 );
-        this.sp =  this.level * ((int) (Math.random() * 6) + 1 );
+        this.hp = 2 * this.level * dice;
+        this.dp =  this.level * dice;
+        this.sp =  this.level * dice;
         this.positionedImage(appearance,posX,posY);
     }
 

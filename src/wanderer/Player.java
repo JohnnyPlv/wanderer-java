@@ -7,24 +7,27 @@ public class Player extends Entity {
 
     public Player() {
         this.level = 1;
-        this.hp = 20 + ((int) (Math.random() * 6) + 1 );
-        this.dp = 2 * ((int) (Math.random() * 6) + 1 );
-        this.sp = 5 * ((int) (Math.random() * 6) + 1 );
+        this.hp = 20 + dice;
+        this.dp = 2 * dice;
+        this.sp = 5 * dice;
+        this.inspiration = 4 + this.level + dice;
         this.positionedImage(appearance,0,0);
     }
+ //old fight method
+    public void fight(Entity enemy) {
 
-    public void fight(Entity character) {
-
-        while (this.hp > 0 && character.hp > 0 ) {
-            if ( (2 * ((int) (Math.random() * 6) + 1 ) + this.sp) > character.dp) {
-                character.hp -= this.sp + (((int) (Math.random() * 6) + 1 ) *2 ) - character.dp;
+        while (this.hp > 0 && enemy.hp > 0 ) {
+            if ( (2 * dice + this.sp) > enemy.dp) {
+                enemy.hp -= this.sp + (dice *2 ) - enemy.dp;
             }
-            if ((2 * ((int) (Math.random() * 6) + 1 ) + this.sp) < character.dp) {
-                this.hp -= character.sp + (((int) (Math.random() * 6) + 1 ) *2 ) - this.dp;
+            if ((2 * dice + this.sp) < enemy.dp) {
+                this.hp -= enemy.sp + (dice *2 ) - this.dp;
             }
         }
 
     }
+
+
 
 
 }
