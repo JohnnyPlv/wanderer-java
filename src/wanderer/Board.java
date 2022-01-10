@@ -12,31 +12,20 @@ public class Board extends JComponent implements KeyListener {
     private int heroPositionX;  // TODO implement the actual value from player instead board value for hero
     private int heroPositionY;
     protected Player hero;
-    protected List<Entity> listOfEntities; // TODO change List of entites for Enemies to List of enemies - > create class Enemy?
+    //protected List<Entity> listOfEntitities; // TODO change List of entites for Enemies to List of enemies - > create class Enemy?
     protected int moveClock;
     protected ExperienceTable experienceTable;
+    protected AreaLevel areaLevel;
 
 
-     int[][] gameBoard = {
-            {0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
-            {0, 0, 0, 1, 0, 1, 0, 1, 1, 0},
-            {0, 0, 0, 1, 0, 1, 0, 1, 1, 0},
-            {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-            {1, 1, 1, 1, 0, 1, 1, 1, 1, 0},
-            {0, 1, 0, 1, 0, 0, 1, 0, 0, 0},
-            {0, 1, 0, 1, 0, 1, 1, 0, 1, 0},
-            {0, 0, 0, 0, 0, 1, 1, 0, 1, 0},
-            {0, 1, 1, 1, 0, 0, 0, 0, 1, 0},
-            {0, 0, 0, 1, 0, 1, 1, 0, 0, 0}
-    };
+
 
     public Board() {
         heroPositionX = 360;
         heroPositionY = 360;
         hero = new Player();
         experienceTable = new ExperienceTable();
-        listOfEntities = new ArrayList<>();
-        addEntities();
+        areaLevel = new AreaLevel(1);
         // set the size of your draw board
         setPreferredSize(new Dimension(720, 820));
         setVisible(true);
@@ -77,8 +66,9 @@ public class Board extends JComponent implements KeyListener {
         }
 
         // if the floor is occupies and also the space was hit then hero strikes the entity which shares the pos with hero
+        // TODO battle LOGIC
         if (isOccupiedBySkeleton() && e.getKeyCode() == KeyEvent.VK_SPACE) {
-            for (Entity s : listOfEntities) {
+            for (Entity s : areaLevel.listOfEntities) {
                 if (hero.posX == s.posX && hero.posY == s.posY) {
                     if (hero.inspiration >= s.inspiration) {
                         hero.strike(s);
@@ -116,19 +106,30 @@ public class Board extends JComponent implements KeyListener {
 
         // every time the key is pressed the turn counter starts summing - every second move the enemy moves
         if (moveClock % 2 == 0) {
-            for (Entity s : listOfEntities) {
-               s.randomMoveNpc(gameBoard);
+            for (Entity s : areaLevel.listOfEntities) {
+               s.randomMoveNpc(areaLevel.map);
             }
         }
-
+        // checks if to change the levels
+        changeLevel();
+        // removes dead characters from the list
         removeSkeletons();
 
         repaint();
 
     }
 
+    public void changeLevel () {
+        for (Entity s : areaLevel.listOfEntities) {
+            if (s instanceof Boss && s.isDead()) {
+                areaLevel.currentArea++;
+                areaLevel.generateLevel();
+            }
+        }
+    }
+    // implemented "XP bar" - uses ExperienceTable class where the final variables are set and increases the correct xp per kill
     public void increaseExperience () {
-        for (Entity e : listOfEntities) {
+        for (Entity e : areaLevel.listOfEntities) {
             if (e.isDead() && e instanceof Skeleton) {
                 hero.xpBar += experienceTable.XPGAINEDSKELETON;
             }
@@ -150,7 +151,7 @@ public class Board extends JComponent implements KeyListener {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 Tile tile;
-                if (gameBoard[j][i] == 0) {
+                if (areaLevel.map[j][i] == 0) {
                     tile = new Tile("img/floor.png", posX, posY);
                 } else {
                     tile = new Tile("img/wall.png", posX, posY);
@@ -164,48 +165,48 @@ public class Board extends JComponent implements KeyListener {
         }
     }
     // adds the Enemy to the List<Entites> ,including boss
-    public void addEntities() {
-        for (int i = 0; i < 4 ; i++) {
-            if (i == 0) {
-                listOfEntities.add(new Skeleton());
-            }
-            if (i == 1) {
-                listOfEntities.add(new Skeleton(648,648));
-            }
-            if (i == 2) {
-                listOfEntities.add(new Skeleton(0,648));
-            }
-            if (i == 3) {
-                listOfEntities.add(new Boss());
-            }
-        }
-    }
+//    public void addEntities() {
+//        for (int i = 0; i < 4 ; i++) {
+//            if (i == 0) {
+//                listOfEntitities.add(new Skeleton());
+//            }
+//            if (i == 1) {
+//                listOfEntitities.add(new Skeleton(648,648));
+//            }
+//            if (i == 2) {
+//                listOfEntitities.add(new Skeleton(0,648));
+//            }
+//            if (i == 3) {
+//                listOfEntitities.add(new Boss());
+//            }
+//        }
+//    }
     // method to call the Enemies in bulk on the board
     public void drawEntities(Graphics graphics) {
-        for (Entity s : listOfEntities) {
+        for (Entity s : areaLevel.listOfEntities) {
             s.draw(graphics);
         }
     }
     // method to draw the enttites stat on the board
     public void drawEntitiesStat(Graphics graphics, int posX, int posY) {
-        for (int i = 0; i < listOfEntities.size() ; i++) {
-            if (hero.posX == listOfEntities.get(i).posX && hero.posY == listOfEntities.get(i).posY){
-                listOfEntities.get(i).drawStats(graphics,posX,posY);
+        for (int i = 0; i < areaLevel.listOfEntities.size() ; i++) {
+            if (hero.posX == areaLevel.listOfEntities.get(i).posX && hero.posY == areaLevel.listOfEntities.get(i).posY){
+                areaLevel.listOfEntities.get(i).drawStats(graphics,posX,posY);
             }
         }
     }
     // method to remove the skeletos, loops through the list and checks wheter the condition isDead is true, if yes removes the char
     public void removeSkeletons () {
-        for (Entity s : listOfEntities) {
+        for (Entity s : areaLevel.listOfEntities) {
             if (s.isDead()) {
-                listOfEntities.remove(s);
+                areaLevel.listOfEntities.remove(s);
                 break;
             }
         }
     }
     // method to check if its occupied by skeleton, this method is used for entering the fight
     public boolean isOccupiedBySkeleton () {
-        for (Entity s : listOfEntities) {
+        for (Entity s : areaLevel.listOfEntities) {
             if (hero.posX == s.posX && hero.posY == s.posY) {
                 return true;
             }
@@ -214,6 +215,6 @@ public class Board extends JComponent implements KeyListener {
     }
     // simple boolean used it avooiding wals logic, if matrix value 0 ( floor ) then its true
     public boolean isGround(int x, int y) {
-        return gameBoard[y][x] == 0;
+        return areaLevel.map[y][x] == 0;
     }
 }
