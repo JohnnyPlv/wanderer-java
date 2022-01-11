@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Board extends JComponent implements KeyListener {
 
@@ -21,13 +19,13 @@ public class Board extends JComponent implements KeyListener {
 
 
     public Board() {
-        heroPositionX = 360;
-        heroPositionY = 360;
+        heroPositionX = 0;
+        heroPositionY = 0;
         hero = new Player();
         experienceTable = new ExperienceTable();
         areaLevel = new AreaLevel(1);
         // set the size of your draw board
-        setPreferredSize(new Dimension(720, 820));
+        setPreferredSize(new Dimension(880, 840));
         setVisible(true);
     }
 
@@ -36,12 +34,14 @@ public class Board extends JComponent implements KeyListener {
     public void paint(Graphics graphics) {
         super.paint(graphics);
         background(graphics);
+        backgroundUI(graphics);
         positionHero();
         drawEntities(graphics);
-        hero.drawStats(graphics,5,740);
+        hero.drawHeroStats(graphics,725,30);
         hero.drawXpBar(graphics,600,740);
-        drawEntitiesStat(graphics, 5, 760);
+        drawEntitiesStat(graphics, 5, 740);
         hero.draw(graphics);
+
     }
 
 
@@ -61,13 +61,13 @@ public class Board extends JComponent implements KeyListener {
     public void keyReleased(KeyEvent e) {
         moveClock += 1;
         // checks if the floor is occupied by enemy, if yes it will get out of the method
-        if (isOccupiedBySkeleton() && e.getKeyCode() != KeyEvent.VK_SPACE) {
+        if (isOccupiedByEntity() && e.getKeyCode() != KeyEvent.VK_SPACE) {
             return;
         }
 
         // if the floor is occupies and also the space was hit then hero strikes the entity which shares the pos with hero
         // TODO battle LOGIC
-        if (isOccupiedBySkeleton() && e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (isOccupiedByEntity() && e.getKeyCode() == KeyEvent.VK_SPACE) {
             for (Entity s : areaLevel.listOfEntities) {
                 if (hero.posX == s.posX && hero.posY == s.posY) {
                     if (hero.inspiration >= s.inspiration) {
@@ -107,13 +107,15 @@ public class Board extends JComponent implements KeyListener {
         // every time the key is pressed the turn counter starts summing - every second move the enemy moves
         if (moveClock % 2 == 0) {
             for (Entity s : areaLevel.listOfEntities) {
-               s.randomMoveNpc(areaLevel.map);
+                if (hero.posX != s.posX && hero.posY != s.posY) {
+                    s.randomMoveNpc(areaLevel.map);
+                }
             }
         }
         // checks if to change the levels
         changeLevel();
         // removes dead characters from the list
-        removeSkeletons();
+        removeEntities();
 
         repaint();
 
@@ -124,6 +126,8 @@ public class Board extends JComponent implements KeyListener {
             if (s instanceof Boss && s.isDead()) {
                 areaLevel.currentArea++;
                 areaLevel.generateLevel();
+                heroPositionX = 0;
+                heroPositionY = 0;
             }
         }
     }
@@ -163,24 +167,13 @@ public class Board extends JComponent implements KeyListener {
             posY = 0;
             posX += 72;
         }
+
     }
-    // adds the Enemy to the List<Entites> ,including boss
-//    public void addEntities() {
-//        for (int i = 0; i < 4 ; i++) {
-//            if (i == 0) {
-//                listOfEntitities.add(new Skeleton());
-//            }
-//            if (i == 1) {
-//                listOfEntitities.add(new Skeleton(648,648));
-//            }
-//            if (i == 2) {
-//                listOfEntitities.add(new Skeleton(0,648));
-//            }
-//            if (i == 3) {
-//                listOfEntitities.add(new Boss());
-//            }
-//        }
-//    }
+    public void backgroundUI(Graphics graphics) {
+        graphics.setColor(Color.black);
+        graphics.fillRect(0,720,880,120);
+        graphics.fillRect(720,0,160,840);
+    }
     // method to call the Enemies in bulk on the board
     public void drawEntities(Graphics graphics) {
         for (Entity s : areaLevel.listOfEntities) {
@@ -196,7 +189,7 @@ public class Board extends JComponent implements KeyListener {
         }
     }
     // method to remove the skeletos, loops through the list and checks wheter the condition isDead is true, if yes removes the char
-    public void removeSkeletons () {
+    public void removeEntities() {
         for (Entity s : areaLevel.listOfEntities) {
             if (s.isDead()) {
                 areaLevel.listOfEntities.remove(s);
@@ -205,7 +198,7 @@ public class Board extends JComponent implements KeyListener {
         }
     }
     // method to check if its occupied by skeleton, this method is used for entering the fight
-    public boolean isOccupiedBySkeleton () {
+    public boolean isOccupiedByEntity() {
         for (Entity s : areaLevel.listOfEntities) {
             if (hero.posX == s.posX && hero.posY == s.posY) {
                 return true;
