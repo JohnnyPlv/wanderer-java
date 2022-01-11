@@ -29,13 +29,19 @@ public abstract class Entity implements Drawable {
             graphics.drawImage(image, posX, posY, null);
         }
     }
-
+    // general draw for Entites - enemies
     public void drawStats (Graphics graphics, int posX, int posY) {
+        drawUI(graphics,posX,posY).drawString(this.toString(),posX,posY);
+    }
+
+    // takes care of setting up the String font and size and using it in other methods
+    @Override
+    public Graphics2D drawUI(Graphics graphics, int posX, int posY) {
         Graphics2D g2 = (Graphics2D) graphics;
         int fontSize = 20;
-        Font f = new Font("SANS_SERIF",Font.BOLD,fontSize);
+        Font f = new Font("Calisto MT",Font.PLAIN,fontSize);
         g2.setFont(f);
-        g2.drawString(this.toString(),posX,posY);
+        return g2;
     }
 
     @Override
