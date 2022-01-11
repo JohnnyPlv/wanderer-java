@@ -39,6 +39,7 @@ public class Board extends JComponent implements KeyListener {
         drawEntities(graphics);
         hero.drawHeroStats(graphics,725,30);
         hero.drawXpBar(graphics,600,740);
+        hero.drawHpBar(graphics,5,770,hero.hp * 3,30);
         drawEntitiesStat(graphics, 5, 740);
         hero.draw(graphics);
 

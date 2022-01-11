@@ -31,15 +31,15 @@ public abstract class Entity implements Drawable {
     }
     // general draw for Entites - enemies
     public void drawStats (Graphics graphics, int posX, int posY) {
-        drawUI(graphics,posX,posY).drawString(this.toString(),posX,posY);
+        drawFont(graphics,posX,posY).drawString(this.toString(),posX,posY);
     }
 
     // takes care of setting up the String font and size and using it in other methods
     @Override
-    public Graphics2D drawUI(Graphics graphics, int posX, int posY) {
+    public Graphics2D drawFont(Graphics graphics, int posX, int posY) {
         Graphics2D g2 = (Graphics2D) graphics;
         int fontSize = 20;
-        Font f = new Font("Calisto MT",Font.PLAIN,fontSize);
+        Font f = new Font("Century Gothic",Font.BOLD,fontSize);
         g2.setFont(f);
         return g2;
     }
