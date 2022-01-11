@@ -36,7 +36,6 @@ public abstract class Entity implements Drawable {
         Font f = new Font("SANS_SERIF",Font.BOLD,fontSize);
         g2.setFont(f);
         g2.drawString(this.toString(),posX,posY);
-
     }
 
     @Override
@@ -80,8 +79,13 @@ public abstract class Entity implements Drawable {
         }
     }
 
-    public void strike(Entity character) {
-        character.hp -= this.sp - character.dp;
+    public void strike(Entity character) { // TODO do something with return, probly make another method which return damage
+        if (!(damageDealt(character) <= 0))
+        character.hp -= damageDealt(character);
+    }
+
+    public int damageDealt(Entity character) {
+        return this.sp - character.dp;
     }
 
 
