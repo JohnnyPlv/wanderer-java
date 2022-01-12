@@ -117,6 +117,8 @@ public class Board extends JComponent implements KeyListener {
         changeLevel();
         // removes dead characters from the list
         removeEntities();
+        // check if current HP of the hero is below 0, if yes then it loads level1
+        makeGameOver();
 
         repaint();
 
@@ -132,6 +134,17 @@ public class Board extends JComponent implements KeyListener {
             }
         }
     }
+
+    public void makeGameOver () {
+        if (hero.currentHp <= 0) {
+            areaLevel.currentArea = 1;
+            areaLevel.generateLevel();
+            hero.currentHp = hero.hp;
+            heroPositionX = 0;
+            heroPositionY = 0;
+        }
+    }
+
     // implemented "XP bar" - uses ExperienceTable class where the final variables are set and increases the correct xp per kill
     public void increaseExperience () {
         for (Entity e : areaLevel.listOfEntities) {
@@ -186,7 +199,7 @@ public class Board extends JComponent implements KeyListener {
         for (int i = 0; i < areaLevel.listOfEntities.size() ; i++) {
             if (hero.posX == areaLevel.listOfEntities.get(i).posX && hero.posY == areaLevel.listOfEntities.get(i).posY){
                 areaLevel.listOfEntities.get(i).drawStats(graphics,posX,posY);
-                areaLevel.listOfEntities.get(i).drawHpBar(graphics,5,770,areaLevel.listOfEntities.get(i).hp * 6,20);
+                areaLevel.listOfEntities.get(i).drawHpBar(graphics,5,770, areaLevel.listOfEntities.get(i).currentHp * 6,20, areaLevel.listOfEntities.get(i).hp *6);
             }
         }
     }
