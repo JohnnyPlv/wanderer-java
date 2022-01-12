@@ -29,6 +29,12 @@ public abstract class Entity implements Drawable {
             graphics.drawImage(image, posX, posY, null);
         }
     }
+
+    public void drawHpBar (Graphics graphics,int posX, int posY, int posXwidth, int posYheight) {
+        graphics.setColor(Color.red);
+        graphics.fillRect(posX,posY,posXwidth,posYheight);
+    }
+
     // general draw for Entites - enemies
     public void drawStats (Graphics graphics, int posX, int posY) {
         drawFont(graphics,posX,posY).drawString(this.toString(),posX,posY);

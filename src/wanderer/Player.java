@@ -61,11 +61,11 @@ public class Player extends Entity {
     public void drawXpBar (Graphics graphics, int posX, int posY) {
         drawFont(graphics, posX, posY).drawString(this.toStringXpBar(),posX,posY);
     }
-
-    public void drawHpBar (Graphics graphics,int posX, int posY, int posXwidth, int posYheight) {
-        graphics.setColor(Color.red);
-        graphics.fillRect(posX,posY,posXwidth,posYheight);
-    }
+        // TODO make new HpBar , make it from entity and move it to HERO stats
+//    public void drawHpBar (Graphics graphics,int posX, int posY, int posXwidth, int posYheight) {
+//        graphics.setColor(Color.red);
+//        graphics.fillRect(posX,posY,posXwidth,posYheight);
+//    }
 
 
 
