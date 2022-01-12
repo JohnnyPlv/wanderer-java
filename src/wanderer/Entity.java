@@ -11,6 +11,7 @@ public abstract class Entity implements Drawable {
     BufferedImage image;
     protected int posX , posY;
     protected int hp;
+    protected int currentHp;
     protected int dp;
     protected int sp;
     protected int inspiration;
@@ -20,9 +21,9 @@ public abstract class Entity implements Drawable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " (Level " + level + " ) " + " HP " + hp + " DP " + dp + " SP " + sp + " Inspiration " + inspiration;
+        return getClass().getSimpleName() + " (Level " + level + " ) " + " HP " + currentHp + "/" + hp + " DP " + dp + " SP " + sp + " Inspiration " + inspiration;
     }
-
+    // draws image of the entity
     @Override
     public void draw(Graphics graphics) {
         if (image != null) {
@@ -30,9 +31,12 @@ public abstract class Entity implements Drawable {
         }
     }
 
-    public void drawHpBar (Graphics graphics,int posX, int posY, int posXwidth, int posYheight) {
+    public void drawHpBar (Graphics graphics,int posX, int posY, int posXwidth, int posYheight, int xBckrWidth) {
+        Color brown = new Color(83, 52, 86, 255);
+        graphics.setColor(brown);
+        graphics.fillRect(posX - 3,posY - 3,xBckrWidth + 5,posYheight + 5); // to draw background of HP bar, using parameter xBckr
         graphics.setColor(Color.red);
-        graphics.fillRect(posX,posY,posXwidth,posYheight);
+        graphics.fillRect(posX,posY,posXwidth,posYheight); // to draw HP bar with red color
     }
 
     // general draw for Entites - enemies
@@ -84,7 +88,7 @@ public abstract class Entity implements Drawable {
     }
 
     public boolean isDead () {
-        if (this.hp <= 0) {
+        if (this.currentHp <= 0) {
             return true;
         } else {
             return false;
@@ -93,11 +97,11 @@ public abstract class Entity implements Drawable {
 
     public void strike(Entity character) { // TODO do something with return, probly make another method which return damage
         if (!(damageDealt(character) <= 0))
-        character.hp -= damageDealt(character);
+        character.currentHp -= damageDealt(character);
     }
 
     public int damageDealt(Entity character) {
-        return this.sp - character.dp;
+        return (this.sp + this.dice) - (character.dp + character.dice);
     }
 
 

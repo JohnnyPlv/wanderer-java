@@ -199,7 +199,9 @@ public class Board extends JComponent implements KeyListener {
         for (int i = 0; i < areaLevel.listOfEntities.size() ; i++) {
             if (hero.posX == areaLevel.listOfEntities.get(i).posX && hero.posY == areaLevel.listOfEntities.get(i).posY){
                 areaLevel.listOfEntities.get(i).drawStats(graphics,posX,posY);
-                areaLevel.listOfEntities.get(i).drawHpBar(graphics,5,770, areaLevel.listOfEntities.get(i).currentHp * 6,20, areaLevel.listOfEntities.get(i).hp *6);
+                areaLevel.listOfEntities.get(i).drawHpBar(graphics,5,770,
+                        areaLevel.listOfEntities.get(i).currentHp * 20,20, areaLevel.listOfEntities.get(i).hp *20);
+                // * number - to increase the bar size
             }
         }
     }

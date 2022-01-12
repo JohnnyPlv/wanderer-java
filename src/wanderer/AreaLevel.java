@@ -17,7 +17,7 @@ public class AreaLevel {
     public void generateLevel() {
         if (currentArea == 1) {
             listOfEntities.clear(); // better way to use built in method .clear instead of using while loop and remove them one by one
-            listOfEntities.add(new Skeleton());
+            listOfEntities.add(new Skeleton(216,216));
             listOfEntities.add(new Skeleton(648, 648));
             listOfEntities.add(new Skeleton(0, 648));
             listOfEntities.add(new Boss());
@@ -37,13 +37,14 @@ public class AreaLevel {
         }
         if (currentArea == 2) {
             listOfEntities.clear();
-            listOfEntities.add(new Skeleton());
-            listOfEntities.add(new Skeleton(648, 648));
+            listOfEntities.add(new Skeleton(0,576));
+            listOfEntities.add(new Skeleton(576, 576));
             listOfEntities.add(new Skeleton(0, 648));
+            listOfEntities.add(new Skeleton(144, 648));
             listOfEntities.add(new Boss());
             map = new int[][]{
-                    {1, 0, 0, 1, 1, 1, 0, 0, 0, 0},
-                    {1, 0, 0, 1, 1, 1, 0, 1, 1, 0},
+                    {0, 0, 0, 1, 1, 1, 0, 0, 0, 0},
+                    {0, 0, 0, 1, 1, 1, 0, 1, 1, 0},
                     {0, 0, 0, 1, 1, 1, 0, 1, 1, 0},
                     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                     {1, 1, 1, 1, 1, 1, 1, 1, 1, 0},

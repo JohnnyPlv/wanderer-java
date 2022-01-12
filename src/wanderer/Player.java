@@ -13,10 +13,11 @@ public class Player extends Entity {
     public Player() {
         this.level = 1;
         this.xpBar = 0;
-        this.hp = 20 + dice;
-        this.dp = 2 * dice;
-        this.sp = 5 * dice;
-        this.inspiration = 4 + this.level + dice;
+        this.hp = 20 ;
+        this.currentHp = this.hp;
+        this.dp = 2 ;
+        this.sp = 5 ;
+        this.inspiration = 4 + this.level;
         this.positionedImage(appearance,0,0);
         //this.stats = new HashMap<>();
         //addStats();
@@ -41,7 +42,7 @@ public class Player extends Entity {
 
     public String toStringStats() {
         return getClass().getSimpleName() + " (Level " + level + ")" +
-                "\n" + "HP " + hp +
+                "\n" + "HP " + currentHp + "/" + hp +
                 "\n" + "DP " + dp +
                 "\n" + "SP " + sp +
                 "\n" + "Inspiration " + inspiration;
@@ -54,7 +55,7 @@ public class Player extends Entity {
         drawFont(graphics, posX, posY);
         for (String line : this.toStringStats().split("\n")) {
             drawFont(graphics, posX, posY).drawString(line,posX,posY);
-            posY += 20;
+            posY += 30;
         }
     }
     // draws ex bar
