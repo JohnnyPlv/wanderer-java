@@ -52,9 +52,8 @@ public class Player extends Entity {
     public void drawHeroStats (Graphics graphics, int posX, int posY) {
         Color grey = new Color(108,108,108);
         graphics.setColor(grey);
-        drawFont(graphics, posX, posY);
         for (String line : this.toStringStats().split("\n")) {
-            drawFont(graphics, posX, posY).drawString(line,posX,posY);
+            drawFont(graphics, posX, posY).drawString(line,posX,posY); // draw Font iscreated in entity field and creates the specifik font, returns Graphics-font
             posY += 30;
         }
     }
