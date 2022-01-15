@@ -10,11 +10,12 @@ public class Dice implements Drawable {
     protected int posX;
     protected int posY;
     BufferedImage image;
-    protected final int VALUE = ((int) (Math.random() * 6) + 1 );
     protected String appearance;
+    protected int valueForSp;
+    protected int valueForDp;
 
-    public Dice() {
-        switch (VALUE) {
+    public Dice() { // TODO have to finish the pictures of Dice, this switch in constructor is not in use yet..
+        switch (5) {
             case 1:
                 appearance = "img/boss.png";
                 break;
@@ -34,7 +35,19 @@ public class Dice implements Drawable {
                 appearance = "img/hero-up.png";
                 break;
         }
-        this.positionedImage(appearance,725,70);
+
+
+        this.positionedImage(appearance,posX,posY);
+    }
+
+    public int rollDiceOnSp () {
+        valueForSp = ((int) (Math.random() * 6) + 1 );
+        return valueForSp;
+    }
+
+    public int rollDiceOnDp () {
+        valueForDp = ((int) (Math.random() * 6) + 1 );
+        return valueForDp;
     }
 
     @Override

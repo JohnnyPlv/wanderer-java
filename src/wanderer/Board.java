@@ -14,6 +14,7 @@ public class Board extends JComponent implements KeyListener {
     protected int moveClock;
     protected ExperienceTable experienceTable;
     protected AreaLevel areaLevel;
+    protected boolean isAction;
 
 
 
@@ -42,6 +43,11 @@ public class Board extends JComponent implements KeyListener {
         //hero.drawHpBar(graphics,5,770,hero.hp * 3,30);
         drawEntitiesStat(graphics, 5, 740);
         hero.draw(graphics);
+        // if there is a isAction - it means the Space is pressed, it draws dice String to "console"
+        if (isAction) {
+            hero.drawDiceValue(graphics,250,760);
+            drawEntitiesDice(graphics);
+        }
 
     }
 
@@ -65,7 +71,12 @@ public class Board extends JComponent implements KeyListener {
         if (isOccupiedByEntity() && e.getKeyCode() != KeyEvent.VK_SPACE) {
             return;
         }
-
+        // for value check if Action or Movement
+        if (e.getKeyCode() == KeyEvent.VK_SPACE){
+            isAction = true;
+        } else {
+            isAction = false; // is movement
+        }
         // if the floor is occupies and also the space was hit then hero strikes the entity which shares the pos with hero
         // TODO battle LOGIC
         if (isOccupiedByEntity() && e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -134,6 +145,8 @@ public class Board extends JComponent implements KeyListener {
             }
         }
     }
+
+
 
     public void makeGameOver () {
         if (hero.currentHp <= 0) {
@@ -205,6 +218,16 @@ public class Board extends JComponent implements KeyListener {
             }
         }
     }
+    // to list  and draw each entity rolled dice
+    public void drawEntitiesDice(Graphics graphics) {
+        for (int i = 0; i < areaLevel.listOfEntities.size() ; i++) {
+            if (hero.posX == areaLevel.listOfEntities.get(i).posX && hero.posY == areaLevel.listOfEntities.get(i).posY) {
+                areaLevel.listOfEntities.get(i).drawDiceValue(graphics,250,780);
+            }
+
+        }
+    }
+
     // method to remove the skeletos, loops through the list and checks wheter the condition isDead is true, if yes removes the char
     public void removeEntities() {
         for (Entity s : areaLevel.listOfEntities) {

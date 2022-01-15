@@ -16,12 +16,17 @@ public abstract class Entity implements Drawable {
     protected int sp;
     protected int inspiration;
     protected int level;
-    protected int dice = ((int) (Math.random() * 6) + 1 );
+    protected Dice dice = new Dice();
 
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + " (Level " + level + " ) " + " HP " + currentHp + "/" + hp + " DP " + dp + " SP " + sp + " Inspiration " + inspiration;
+    }
+
+    public String diceToString() {
+        return "Rolled dice on SP : " + this.dice.valueForSp  + "Rolled dice on SP : " + this.dice.valueForDp + "\n" +
+        " ";
     }
     // draws image of the entity
     @Override
@@ -31,6 +36,8 @@ public abstract class Entity implements Drawable {
         }
     }
 
+
+
     public void drawHpBar (Graphics graphics,int posX, int posY, int posXwidth, int posYheight, int xBckrWidth) {
         Color brown = new Color(83, 52, 86, 255);
         graphics.setColor(brown);
@@ -39,9 +46,12 @@ public abstract class Entity implements Drawable {
         graphics.fillRect(posX,posY,posXwidth,posYheight); // to draw HP bar with red color
     }
 
-    // general draw for Entites - enemies
+    // general draw for Entites stats - enemies
     public void drawStats (Graphics graphics, int posX, int posY) {
         drawFont(graphics,posX,posY).drawString(this.toString(),posX,posY);
+    }
+    public void drawDiceValue (Graphics graphics, int posX, int posY) {
+        drawFont(graphics,posX,posY).drawString(this.diceToString(),posX,posY);
     }
 
     // takes care of setting up the String font and size and using it in other methods
@@ -95,14 +105,23 @@ public abstract class Entity implements Drawable {
         }
     }
 
-    public void strike(Entity character) { // TODO do something with return, probly make another method which return damage
-        if (!(damageDealt(character) <= 0))
-        character.currentHp -= damageDealt(character);
+    public void strike(Entity character) {
+        int damage = damageDealt(character);
+        if ((damage >= 0)) {
+            character.currentHp -= damage;
+        }
+    }
+    // TODO not necessary I guess, code dupliation, I can merge the get roll with dice.roll
+    public int damageDealt(Entity character) {
+        return (this.sp + this.getRollOnSp()) - (character.dp + character.getRollOnDp());
+    }
+    public int getRollOnSp() {
+        return dice.rollDiceOnSp();
+    }
+    public int getRollOnDp() {
+        return dice.rollDiceOnDp();
     }
 
-    public int damageDealt(Entity character) {
-        return (this.sp + this.dice) - (character.dp + character.dice);
-    }
 
 
     public boolean isFloor(int [][] gameBoard,int x, int y) {

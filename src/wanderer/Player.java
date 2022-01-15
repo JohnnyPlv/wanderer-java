@@ -23,18 +23,18 @@ public class Player extends Entity {
         //addStats();
     }
  //old fight method
-    public void fight(Entity enemy) {
-
-        while (this.hp > 0 && enemy.hp > 0 ) {
-            if ( (2 * dice + this.sp) > enemy.dp) {
-                enemy.hp -= this.sp + (dice *2 ) - enemy.dp;
-            }
-            if ((2 * dice + this.sp) < enemy.dp) {
-                this.hp -= enemy.sp + (dice *2 ) - this.dp;
-            }
-        }
-
-    }
+//    public void fight(Entity enemy) {
+//
+//        while (this.hp > 0 && enemy.hp > 0 ) {
+//            if ( (2 * dice + this.sp) > enemy.dp) {
+//                enemy.hp -= this.sp + (dice *2 ) - enemy.dp;
+//            }
+//            if ((2 * dice + this.sp) < enemy.dp) {
+//                this.hp -= enemy.sp + (dice *2 ) - this.dp;
+//            }
+//        }
+//
+//    }
 
     public String toStringXpBar() {
         return "XP BAR: " + xpBar;
