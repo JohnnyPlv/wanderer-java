@@ -19,7 +19,7 @@ public class Skeleton extends Entity {
 
     public Skeleton(int posX,int posY) {
         this.level = 1;
-        this.hp = 2 * this.level  ;
+        this.hp = 10 * this.level  ;
         this.currentHp = this.hp;
         this.dp =  this.level  ;
         this.sp =  this.level  ;
