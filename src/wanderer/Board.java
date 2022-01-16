@@ -45,7 +45,7 @@ public class Board extends JComponent implements KeyListener {
         hero.draw(graphics);
         // if there is a isAction - it means the Space is pressed, it draws dice String to "console"
         if (isAction) {
-            hero.drawDiceValue(graphics,250,760);
+            hero.drawDiceValue(graphics,200,760);
             drawEntitiesDice(graphics);
         }
 
@@ -130,6 +130,8 @@ public class Board extends JComponent implements KeyListener {
         removeEntities();
         // check if current HP of the hero is below 0, if yes then it loads level1
         makeGameOver();
+        //check if hero should level up
+        hero.levelUp();
 
         repaint();
 
@@ -222,12 +224,11 @@ public class Board extends JComponent implements KeyListener {
     public void drawEntitiesDice(Graphics graphics) {
         for (int i = 0; i < areaLevel.listOfEntities.size() ; i++) {
             if (hero.posX == areaLevel.listOfEntities.get(i).posX && hero.posY == areaLevel.listOfEntities.get(i).posY) {
-                areaLevel.listOfEntities.get(i).drawDiceValue(graphics,250,780);
+                areaLevel.listOfEntities.get(i).drawDiceValue(graphics,200,780);
             }
 
         }
     }
-
     // method to remove the skeletos, loops through the list and checks wheter the condition isDead is true, if yes removes the char
     public void removeEntities() {
         for (Entity s : areaLevel.listOfEntities) {
