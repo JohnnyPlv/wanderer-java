@@ -1,7 +1,6 @@
 package wanderer;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,6 +16,7 @@ public abstract class Entity implements Drawable {
     protected int inspiration;
     protected int level;
     protected Dice dice = new Dice();
+    protected int damageDealt;
 
 
     @Override
@@ -25,8 +25,7 @@ public abstract class Entity implements Drawable {
     }
 
     public String diceToString() {
-        return "Rolled dice on SP : " + this.dice.valueForSp  + "Rolled dice on SP : " + this.dice.valueForDp + "\n" +
-        " ";
+        return getClass().getSimpleName() + " " + "Rolled dice on SP: " + this.dice.valueForSp  + " Rolled dice on DP: " + this.dice.valueForDp + " Damage dealt -> " + this.damageDealt;
     }
     // draws image of the entity
     @Override
@@ -106,14 +105,20 @@ public abstract class Entity implements Drawable {
     }
 
     public void strike(Entity character) {
-        int damage = damageDealt(character);
+        int damage = getDamageDealt(character);
         if ((damage >= 0)) {
             character.currentHp -= damage;
         }
     }
     // TODO not necessary I guess, code dupliation, I can merge the get roll with dice.roll
-    public int damageDealt(Entity character) {
-        return (this.sp + this.getRollOnSp()) - (character.dp + character.getRollOnDp());
+    public int getDamageDealt(Entity character) {
+        damageDealt = (this.sp + this.getRollOnSp()) - (character.dp + character.getRollOnDp());
+        if (damageDealt <= 0) {
+            damageDealt = 0;
+            return damageDealt;
+        } else {
+            return damageDealt;
+        }
     }
     public int getRollOnSp() {
         return dice.rollDiceOnSp();
