@@ -24,7 +24,7 @@ public abstract class Entity implements Drawable {
         return getClass().getSimpleName() + " (Level " + level + " ) " + " HP " + currentHp + "/" + hp + " DP " + dp + " SP " + sp + " Inspiration " + inspiration;
     }
 
-    public String diceToString() {
+    public String combatToString() {
         return getClass().getSimpleName() + " " + "Rolled dice on SP: " + this.dice.valueForSp  + " Rolled dice on DP: " + this.dice.valueForDp + " Damage dealt -> " + this.damageDealt;
     }
     // draws image of the entity
@@ -49,8 +49,8 @@ public abstract class Entity implements Drawable {
     public void drawStats (Graphics graphics, int posX, int posY) {
         drawFont(graphics,posX,posY).drawString(this.toString(),posX,posY);
     }
-    public void drawDiceValue (Graphics graphics, int posX, int posY) {
-        drawFont(graphics,posX,posY).drawString(this.diceToString(),posX,posY);
+    public void drawCombatString(Graphics graphics, int posX, int posY) {
+        drawFont(graphics,posX,posY).drawString(this.combatToString(),posX,posY);
     }
 
     // takes care of setting up the String font and size and using it in other methods

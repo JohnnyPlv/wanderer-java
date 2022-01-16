@@ -26,7 +26,7 @@ public class Board extends JComponent implements KeyListener {
         experienceTable = new ExperienceTable();
         areaLevel = new AreaLevel(1);
         // set the size of your draw board
-        setPreferredSize(new Dimension(880, 840));
+        setPreferredSize(new Dimension(880, 880));
         setVisible(true);
     }
 
@@ -35,6 +35,7 @@ public class Board extends JComponent implements KeyListener {
     public void paint(Graphics graphics) {
         super.paint(graphics);
         background(graphics);
+        // draws black background
         backgroundUI(graphics);
         positionHero();
         drawEntities(graphics);
@@ -45,8 +46,8 @@ public class Board extends JComponent implements KeyListener {
         hero.draw(graphics);
         // if there is a isAction - it means the Space is pressed, it draws dice String to "console"
         if (isAction) {
-            hero.drawDiceValue(graphics,200,760);
-            drawEntitiesDice(graphics);
+            hero.drawCombatString(graphics,5,820);
+            drawEntitiesCombatStatus(graphics);
         }
 
     }
@@ -200,8 +201,8 @@ public class Board extends JComponent implements KeyListener {
     }
     public void backgroundUI(Graphics graphics) {
         graphics.setColor(Color.black);
-        graphics.fillRect(0,720,880,120);
-        graphics.fillRect(720,0,160,840);
+        graphics.fillRect(0,720,880,160);
+        graphics.fillRect(720,0,160,880);
     }
     // method to call the Enemies in bulk on the board
     public void drawEntities(Graphics graphics) {
@@ -221,10 +222,10 @@ public class Board extends JComponent implements KeyListener {
         }
     }
     // to list  and draw each entity rolled dice
-    public void drawEntitiesDice(Graphics graphics) {
+    public void drawEntitiesCombatStatus(Graphics graphics) {
         for (int i = 0; i < areaLevel.listOfEntities.size() ; i++) {
             if (hero.posX == areaLevel.listOfEntities.get(i).posX && hero.posY == areaLevel.listOfEntities.get(i).posY) {
-                areaLevel.listOfEntities.get(i).drawDiceValue(graphics,200,780);
+                areaLevel.listOfEntities.get(i).drawCombatString(graphics,5,840);
             }
 
         }
